@@ -209,5 +209,7 @@ class Task(db.Model):
            'status'     : self.status,
        }
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+# if __name__ == "__main__":
+#     app.run(host='0.0.0.0')
+
+#GUNICORN_CMD_ARGS="--bind=0.0.0.0:5000 --timeout 600" gunicorn application:app
