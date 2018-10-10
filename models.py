@@ -1,5 +1,10 @@
-from index import db, bcrypt
+from application import app
 from datetime import datetime, timedelta
+from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 
 
 class User(db.Model):
@@ -16,6 +21,21 @@ class User(db.Model):
         self.email = email
         self.active = True
         self.password = User.hashed_password(password)
+    
+    @staticmethod
+    def create_user(payload):
+        user = User(
+            email=payload["email"],
+            password=payload["password"],
+            first_name=payload["first_name"],
+            last_name=payload["last_name"],
+        )
+        db.session.add(user)
+
+        # try:
+        db.session.commit()
+        # except IntegrityError:
+        #     return jsonify(message="User with that email already exists"), 409
 
     @staticmethod
     def hashed_password(password):
@@ -51,6 +71,20 @@ class Task(db.Model):
         self.task = task
         self.user_id = user_id
         self.status = status
+
+    @staticmethod
+    def add_task(incoming):
+        task = Task(
+            task=incoming["task"],
+            user_id=incoming["user_id"],
+            status=incoming["status"]
+        )
+        db.session.add(task)
+
+        # try:
+        db.session.commit()
+        # except IntegrityError:
+        #     return jsonify(message="Error submitting task"), 409
     
     @staticmethod
     def get_latest_tasks():
