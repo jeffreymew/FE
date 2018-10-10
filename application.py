@@ -7,8 +7,6 @@ from utils.auth import generate_token, requires_auth, verify_token
 app = Flask(__name__, static_folder="../static/dist", template_folder="../static")
 app.config.from_object(BaseConfig)
 
-# from models import User, Task
-
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
