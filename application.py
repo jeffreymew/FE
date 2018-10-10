@@ -4,7 +4,7 @@ from flask import request, render_template, jsonify, url_for, redirect, g, Bluep
 from sqlalchemy.exc import IntegrityError
 from utils.auth import generate_token, requires_auth, verify_token
 
-app = Flask(__name__, static_folder="../static/dist", template_folder="../static")
+app = Flask(__name__)
 app.config.from_object(BaseConfig)
 
 @app.route('/', methods=['GET'])
