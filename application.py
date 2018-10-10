@@ -115,11 +115,7 @@ class User(db.Model):
             last_name=payload["last_name"],
         )
         db.session.add(user)
-
-        # try:
         db.session.commit()
-        # except IntegrityError:
-        #     return jsonify(message="User with that email already exists"), 409
 
     @staticmethod
     def hashed_password(password):
@@ -164,30 +160,20 @@ class Task(db.Model):
             status=incoming["status"]
         )
         db.session.add(task)
-
-        # try:
         db.session.commit()
-        # except IntegrityError:
-        #     return jsonify(message="Error submitting task"), 409
     
     @staticmethod
     def get_latest_tasks():
-        # import pdb;pdb.set_trace()
         user_to_task = {}
 
         result = db.engine.execute(
-            """SELECT date, task, t.user_id, status from task t 
+            """SELECT date, task, t.user_id, status, u.first_name, u.last_name
+                from task t 
                 INNER JOIN (SELECT user_id, max(date) as MaxDate from task group by user_id) tm 
-                on t.user_id = tm.user_id and t.date = tm.MaxDate""")
+                    on t.user_id = tm.user_id and t.date = tm.MaxDate 
+                INNER JOIN "user" u 
+                    on t.user_id = u.email""") # join with users table
         for t in result:
-
-        
-        # Task.query.join(subq, and_(Task.user_id == subq.user_id, Task.date == subq.date))
-        
-
-        # all_tasks = Task.query.filter(Task.date >= datetime.utcnow().date())
-        # user_to_task = {}
-        # for t in all_tasks:
             if t.user_id in user_to_task:
                 user_to_task.get(t.user_id).append(dict(t))
             else:
@@ -208,8 +194,5 @@ class Task(db.Model):
            'user_id'    : self.user_id,
            'status'     : self.status,
        }
-
-# if __name__ == "__main__":
-#     app.run(host='0.0.0.0')
 
 #GUNICORN_CMD_ARGS="--bind=0.0.0.0:8000 --timeout 600" gunicorn application:app
