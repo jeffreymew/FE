@@ -208,3 +208,6 @@ class Task(db.Model):
            'user_id'    : self.user_id,
            'status'     : self.status,
        }
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
