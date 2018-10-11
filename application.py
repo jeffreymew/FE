@@ -82,7 +82,6 @@ def get_tasks_for_user():
     )
 
 
-# from application import app
 from datetime import datetime, timedelta
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
