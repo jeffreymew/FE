@@ -17,10 +17,8 @@ def any_root_path(path):
     return render_template('index.html')
 
 @app.route("/api/user", methods=["GET"])
-@requires_auth
 def get_user():
-    return jsonify(result=g.current_user,
-                    tasks=Task.get_latest_tasks())
+    return jsonify(tasks=Task.get_latest_tasks())
 
 
 @app.route("/api/create_user", methods=["POST"])
