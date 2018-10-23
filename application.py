@@ -1,20 +1,26 @@
 from flask import Flask
 from config import BaseConfig
-from flask import request, render_template, jsonify, url_for, redirect, g, Blueprint
+from flask import request, render_template, jsonify, url_for, redirect, g, Blueprint, send_from_directory
 from sqlalchemy.exc import IntegrityError
 from utils.auth import generate_token, requires_auth, verify_token
+import os
 
-app = Flask(__name__)
+APP_DIR = os.path.abspath(os.path.dirname(__file__))
+STATIC_FOLDER = os.path.join(APP_DIR, '../static/dist')
+TEMPLATE_FOLDER = os.path.join(APP_DIR, '../static')
+
+app = Flask(__name__, static_folder=STATIC_FOLDER, template_folder=TEMPLATE_FOLDER)
 app.config.from_object(BaseConfig)
 
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
-
+    # return send_from_directory('../static', 'index.html')
 
 @app.route('/<path:path>', methods=['GET'])
 def any_root_path(path):
     return render_template('index.html')
+    # return send_from_directory('../static', 'index.html')
 
 @app.route("/api/user", methods=["GET"])
 @requires_auth

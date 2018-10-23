@@ -1,0 +1,58 @@
+[1mdiff --git a/__pycache__/application.cpython-36.pyc b/__pycache__/application.cpython-36.pyc[m
+[1mindex 901b7cd..3f3b91d 100644[m
+Binary files a/__pycache__/application.cpython-36.pyc and b/__pycache__/application.cpython-36.pyc differ
+[1mdiff --git a/application.py b/application.py[m
+[1mindex 0443bf7..207b859 100644[m
+[1m--- a/application.py[m
+[1m+++ b/application.py[m
+[36m@@ -1,20 +1,26 @@[m
+ from flask import Flask[m
+ from config import BaseConfig[m
+[31m-from flask import request, render_template, jsonify, url_for, redirect, g, Blueprint[m
+[32m+[m[32mfrom flask import request, render_template, jsonify, url_for, redirect, g, Blueprint, send_from_directory[m
+ from sqlalchemy.exc import IntegrityError[m
+ from utils.auth import generate_token, requires_auth, verify_token[m
+[32m+[m[32mimport os[m
+ [m
+[31m-app = Flask(__name__)[m
+[32m+[m[32mAPP_DIR = os.path.abspath(os.path.dirname(__file__))[m
+[32m+[m[32mSTATIC_FOLDER = os.path.join(APP_DIR, '../static/dist')[m
+[32m+[m[32mTEMPLATE_FOLDER = os.path.join(APP_DIR, '../static')[m
+[32m+[m
+[32m+[m[32mapp = Flask(__name__, static_folder=STATIC_FOLDER, template_folder=TEMPLATE_FOLDER)[m
+ app.config.from_object(BaseConfig)[m
+ [m
+ @app.route('/', methods=['GET'])[m
+ def index():[m
+     return render_template('index.html')[m
+[31m-[m
+[32m+[m[32m    # return send_from_directory('../static', 'index.html')[m
+ [m
+ @app.route('/<path:path>', methods=['GET'])[m
+ def any_root_path(path):[m
+     return render_template('index.html')[m
+[32m+[m[32m    # return send_from_directory('../static', 'index.html')[m
+ [m
+ @app.route("/api/user", methods=["GET"])[m
+ @requires_auth[m
+[1mdiff --git a/index.html b/index.html[m
+[1mdeleted file mode 100644[m
+[1mindex 24948ba..0000000[m
+[1m--- a/index.html[m
+[1m+++ /dev/null[m
+[36m@@ -1,15 +0,0 @@[m
+[31m-<html>[m
+[31m-[m
+[31m-<head>[m
+[31m-    <meta charset="utf-8">[m
+[31m-    <title>API</title>[m
+[31m-    <meta name="description" content="">[m
+[31m-    <meta name="viewport" content="width=device-width, initial-scale=1">[m
+[31m-</head>[m
+[31m-[m
+[31m-<body>[m
+[31m-    <h1>This is the API.</h1>[m
+[31m-</body>[m
+[31m-[m
+[31m-[m
+[31m-</html>[m
